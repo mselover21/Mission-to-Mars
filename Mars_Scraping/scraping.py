@@ -19,7 +19,7 @@ def scrape_all():
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
         "last_modified": dt.datetime.now(),
-        "hemispheres" : hemispheres(browser)
+        "hemispheres" : hemispheres()
     }
     # Stop webdriver and return data
     browser.quit()
@@ -92,11 +92,14 @@ def mars_facts():
     return df.to_html()
 
 def hemispheres():
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
     # Visit url
     url = 'https://marshemispheres.com/'
     browser.visit(url)
     # collect the 4 hemisphere urls and images
-    hemisphere_image_url = []
+    hemisphere_image_urls = []
+    
     for i in range(4):
 
         hemispheres = {}
@@ -117,7 +120,7 @@ def hemispheres():
 
         browser.back()
 
-    return hemisphere_image_url
+    return hemisphere_image_urls
 
 if __name__=="__main__":
     # If running as script, print scraped data
